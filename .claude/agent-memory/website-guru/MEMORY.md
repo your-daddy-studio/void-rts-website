@@ -41,8 +41,8 @@ Context file: `/Users/slawek/AIGames/VoxelRTS/Claude/Context/website-context.md`
 
 ## GitHub Pages Deployment (added 2026-03-02)
 - Repo: `github.com/your-daddy-studio/void-rts`
-- Live URL: `https://your-daddy-studio.github.io/void-rts/`
-- `astro.config.mjs`: `site: 'https://your-daddy-studio.github.io'`, `base: '/void-rts'`
+- Live URL: `https://your-daddy-studio.github.io/void-rts-website/`
+- `astro.config.mjs`: `site: 'https://your-daddy-studio.github.io'`, `base: '/void-rts-website'`
 - Workflow: `.github/workflows/deploy.yml` — auto-deploys on push to `main`
 - Git repo initialized in project root; initial commit made
 
@@ -54,4 +54,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ```
 In BaseLayout, a `url()` helper function does this. Every page file that builds
 internal hrefs or src paths must define `base` at the top of its frontmatter.
-Never use raw absolute paths like `/devlog/` — they break under `/void-rts/`.
+Never use raw absolute paths like `/devlog/` — they break under `/void-rts-website/`.
+
+## Static Files in public/ — Base Path Behaviour (verified 2026-03-02)
+Keep images in `public/images/` with NO base-named subfolder. Both environments work correctly:
+
+- Dev server (Vite): serves `public/images/` at `/{base}/images/` automatically
+- GitHub Pages: repo name = base path, so GitHub Pages serves dist/ at `github.io/void-rts-website/`
+  meaning `dist/images/` is accessible at `/void-rts-website/images/` ✓
+
+CORRECT:
+  public/images/articles/foo.png  →  /void-rts-website/images/articles/foo.png (both envs) ✓
+
+WRONG — doubles the base path, breaks local dev:
+  public/void-rts-website/images/articles/foo.png  →  dev server: /void-rts-website/void-rts-website/... ✗
+
+When adding a new image, always copy it to:
+  `public/images/articles/` or `public/images/devlog/`

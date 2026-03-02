@@ -291,7 +291,7 @@ function formatDate(dateStr: string) {
       <section>
         <div class="section-header">
           <h2>// Latest devlog</h2>
-          <a href={`${base}/devlog/`}>All entries &rsaquo;</a>
+          <a href={`${base}/devlog/`}>{"All entries >"}</a>
         </div>
         <div class="card-list">
           <a href={`${base}/devlog/${latestDevlog.id.replace(/\.md$/, '')}/`} class="card">
@@ -315,7 +315,7 @@ function formatDate(dateStr: string) {
       <section>
         <div class="section-header">
           <h2>// Latest news</h2>
-          <a href={`${base}/news/`}>All articles &rsaquo;</a>
+          <a href={`${base}/news/`}>{"All articles >"}</a>
         </div>
         <div class="card-list card-list--grid">
           <a href={`${base}/news/${latestNews.id.replace(/\.md$/, '')}/`} class="card">

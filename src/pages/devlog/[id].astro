@@ -28,7 +28,7 @@ function formatDate(dateStr: string) {
 <BaseLayout title={entry.data.title} description={entry.data.summary}>
   <div class="container">
 
-    <a href={`${base}/devlog/`} class="back-link">&larr; All devlog entries</a>
+    <a href={`${base}/devlog/`} class="back-link">{"< All devlog entries"}</a>
 
     <div class="post-meta">
       <span>{formatDate(entry.data.date)}</span>

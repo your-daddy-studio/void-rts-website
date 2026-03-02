@@ -28,7 +28,11 @@ I didn't.
 
 VOID RTS is a space real-time strategy prototype where you command fleets of voxel-built ships — small blocky creatures made of cubes — fighting enemy forces hidden within the fog of war. You mine palladium from asteroids to… well, eventually do something meaningful with it. You explore, attack, and watch satisfying explosions and structural destruction unfold.
 
+![Voxel asteroids shattering into fragments on impact](/void-rts-website/images/articles/asteroids-destruction-demo.png)
+
 As of version v0.040, the prototype includes five ship types with distinct roles, working fog of war, three command modes (move & attack, patrol, and ground attack), a minimap, animated targeting HUDs, and destructible asteroids — all packed into roughly 3,350 lines of code inside a single file.
+
+![Ships following patrol waypoints across the battlefield](/void-rts-website/images/articles/patrol-way-points-demo.png)
 
 Development usually looks like this: I describe what I want, Claude helps generate code or explains possible approaches, and I review, test, and send feedback about what broke or needs adjustment. It's not pressing a button and watching a game magically appear. There's plenty of iteration, debugging, and decisions I still have to make myself.
 

@@ -25,7 +25,11 @@ Nie trafiłem.
 
 VOID RTS to kosmiczna strategia czasu rzeczywistego. Dowodzisz flotą voxelowych statków — małych, blokowych konstrukcji zbudowanych z kostek — przeciwko wrogiej flocie ukrytej w mgle wojny. Wydobywasz pallad z asteroid, żeby… na razie właściwie nie wiadomo co z nim zrobić. Eksplorujesz, atakujesz i oglądasz satysfakcjonujące eksplozje oraz destrukcję.
 
+![Voxelowe asteroidy rozpadające się na fragmenty po trafieniu](/void-rts-website/images/articles/asteroids-destruction-demo.png)
+
 Od wersji v0.040 prototyp zawiera pięć typów statków o różnych rolach, działającą mgłę wojny, trzy tryby rozkazów (ruch i atak, patrol oraz atak gruntu), minimapę, animowane HUD-y celowania oraz zniszczalne asteroidy. Całość to około 3350 linii kodu upchniętych w jednym pliku.
+
+![Statki podążające za punktami patrolowymi na polu bitwy](/void-rts-website/images/articles/patrol-way-points-demo.png)
 
 Development wygląda tak: opisuję, co chcę osiągnąć, Claude pomaga wygenerować kod albo tłumaczy podejście, ja to analizuję, testuję i wracam z feedbackiem — co się popsuło, co działa źle i co wymaga poprawy. To nie jest kliknięcie przycisku i pojawienie się gry znikąd. Jest sporo iteracji, debugowania i decyzji, które nadal muszę podejmować sam.
 
