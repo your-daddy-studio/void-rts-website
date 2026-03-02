@@ -6,44 +6,50 @@ published: true
 heroImage: "articles/gameplay-1-demo.png"
 ---
 
-Powiem wam szczerze: nie jestem deweloperem gier.
+Nie Mam Pojęcia, Co Robię (I Właśnie O To Chodzi)
 
-Nigdy nie wydałem gry. Nie ukończyłem żadnego kursu gamedevu, nie używałem Unity ani Unreal Engine, nigdy nie spędziłem weekendu na game jamie. Moje tło to web development. Najbliżej tworzenia gier byłem, gdy kiedyś zrobiłem animację odbijającej się piłki w JavaScript i byłem z siebie bardzo dumny.
+Powiem szczerze: nie jestem deweloperem.
+
+Nigdy nie wydałem gry. Nie ukończyłem żadnego kursu gamedevu, nie używałem Unity ani Unreal Engine, nigdy nie spędziłem weekendu na game jamie. Moje doświadczenie to głównie grafika reklamowa i trochę Blendera. Najbliżej tworzenia gier byłem kiedyś, gdy zrobiłem animację odbijającej się piłki w Pascalu — i byłem z siebie wtedy naprawdę dumny.
 
 Dlaczego więc VOID RTS w ogóle istnieje?
 
-Szczerze mówiąc — zaciekawiłem się. Chciałem sprawdzić, czy potrafię zbudować grę strategiczną czasu rzeczywistego — statki kosmiczne, mgłę wojny, pozyskiwanie surowców, cały ten zestaw — jako jeden plik HTML, który po prostu otwierasz w przeglądarce. Bez instalacji, bez backendu, bez serwera. Tylko plik. I postanowiłem użyć Claude'a (AI od Anthropic), żeby mi pomógł to ogarnąć — bo nie miałem żadnej wiedzy z gamedevu, na której mógłbym się oprzeć.
+Szczerze mówiąc — z ciekawości. Mam obsesję na punkcie retro stylistyki oraz fizyki destrukcji i voxelowych symulacji. Chciałem sprawdzić, czy przy użyciu narzędzi AI będę w stanie zbudować strategię czasu rzeczywistego — z flotami statków kosmicznych, mgłą wojny, pozyskiwaniem surowców i całym tym klasycznym zestawem mechanik.
 
-Myślałem, że dość szybko trafię na ścianę. Nie trafiłem.
+Postanowiłem użyć Claude'a (AI od Anthropic), żeby pomógł mi to ogarnąć.
+
+Myślałem, że bardzo szybko trafię na ścianę.
+Nie trafiłem.
 
 ## Co Tak Naprawdę Zbudowałem (Nie Wiedząc Co Robię)
 
-To jest kosmiczny RTS. Dowodzisz flotą woksylowych statków — małych, blokowych stworów zbudowanych z kostek — przeciwko wrogiej flocie na polu bitwy skrytym mgłą. Pozyskujesz pallad z asteroid, żeby... coś z nim zrobić kiedyś. Zwiadujesz, atakujesz, oglądasz satysfakcjonujące eksplozje kostek.
+VOID RTS to kosmiczna strategia czasu rzeczywistego. Dowodzisz flotą voxelowych statków — małych, blokowych konstrukcji zbudowanych z kostek — przeciwko wrogiej flocie ukrytej w mgle wojny. Wydobywasz pallad z asteroid, żeby… na razie właściwie nie wiadomo co z nim zrobić. Eksplorujesz, atakujesz i oglądasz satysfakcjonujące eksplozje oraz destrukcję.
 
-Od wersji v0.040 prototyp ma pięć typów statków z różnymi rolami, działającą mgłę wojny, trzy tryby rozkazów (ruch i atak, patrol, atak gruntu), minimapę, animowane HUD-y celowania i zniszczalne asteroidy. Cała gra to jakieś 3 350 linii kodu upchniętych w jednym pliku.
+Od wersji v0.040 prototyp zawiera pięć typów statków o różnych rolach, działającą mgłę wojny, trzy tryby rozkazów (ruch i atak, patrol oraz atak gruntu), minimapę, animowane HUD-y celowania oraz zniszczalne asteroidy. Całość to około 3350 linii kodu upchniętych w jednym pliku.
 
-Tak wygląda ten development w praktyce: opisuję co chcę, Claude pisze kod albo tłumaczy jak do tego podejść, ja to przeglądam, testuję i daję feedback co się popsuło albo wymaga korekty. To nie jest klikanie przycisku i patrzenie jak gra się pojawia — jest sporo tam i z powrotem, debugowania i decyzji które muszę podjąć sam. Ale rzeczywistość jest taka, że bez pomocy AI ten projekt by nie istniał. Nie mam gamedevowego backgroundu, żeby zbudować RTS w Three.js od zera samodzielnie.
+Development wygląda tak: opisuję, co chcę osiągnąć, Claude pomaga wygenerować kod albo tłumaczy podejście, ja to analizuję, testuję i wracam z feedbackiem — co się popsuło, co działa źle i co wymaga poprawy. To nie jest kliknięcie przycisku i pojawienie się gry znikąd. Jest sporo iteracji, debugowania i decyzji, które nadal muszę podejmować sam.
 
-![Asteroidy rozpadające się na woksylowe kawałki przy uderzeniu](/images/articles/asteroids-destruction-demo.png)
-
-Żenująco długo zajęło mi zorientowanie się, dlaczego trasy patrolu zachowywały się dziwnie. Okazuje się, że szukanie ścieżek to głęboka królicza nora. Wciąż jestem w tej norze — nawet z pomocą AI niektóre problemy po prostu wymagają czasu.
-
-![Statki podążające trasą patrolu między dwoma punktami](/images/articles/patrol-way-points-demo.png)
+Prawda jest jednak taka, że bez AI ten projekt nigdy by nie powstał. Nie mam gamedevowego zaplecza, żeby samodzielnie napisać RTS w Three.js od zera. Szczerze mówiąc — jeszcze niedawno nawet nie wiedziałem, czym Three.js właściwie jest.
 
 ## Szczera Prawda O Tym, Dokąd To Zmierza
 
-Nie mam mapy drogowej. Mam listę rzeczy, które wydają mi się fajne, i mglisty pomysł na to, czego potrzebuje prawdziwy RTS, żeby poczuć się kompletnie. Wróg AI, który naprawdę wywiera presję. Produkcja jednostek. Warunek zwycięstwa. Może kiedyś multiplayer, choć jeszcze tak daleko nie myślałem i może nie powinienem.
+Nie mam roadmapy. Mam listę rzeczy, które wydają mi się interesujące, oraz dość mglistą wizję tego, czym ta gra powinna się stać. Oldschoolowy, arcade'owy klimat, taktyczna rozgrywka i — być może kiedyś — multiplayer.
 
-Mogę obiecać jedno — będę budował to dalej, bo naprawdę mi to sprawia przyjemność. I to więcej niż mogę powiedzieć o wielu projektach, które zaczynałem. Jest w tym coś dziwnie satysfakcjonującego, gdy mechanika gry w końcu zaczyna działać, mimo że nie masz pojęcia, czy robisz to "poprawnie" — i gdy właśnie AI-wspomagany workflow jest tym, co tam cię zawiódł.
+Jedno mogę obiecać: będę to dalej budował. Po prostu dlatego, że sprawia mi to ogromną frajdę. AI wykonało tak duży skok, że ktoś bez technicznego backgroundu może dziś realizować pomysły, które wcześniej pozostawały jedynie w sferze wyobraźni.
+
+Jest coś dziwnie satysfakcjonującego w momencie, gdy mechanika gry zaczyna działać — nawet jeśli nie masz pewności, czy robisz wszystko „poprawnie".
 
 ## Tutaj Wchodzicie Wy
 
-Tu jest haczyk — wymyślam to w biegu, z AI jako głównym narzędziem do wszystkiego czego nie wiem. Co oznacza, że pewnie wciąż brakuje mi oczywistych rzeczy. Pomysły, które uczyniłyby grę lepszą, funkcje których gracze RTS by oczekiwali, spostrzeżenia których jeszcze nie miałem, bo to wszystko jest dla mnie nowe.
+Buduję to w biegu, używając AI jako głównego narzędzia do wszystkiego, czego jeszcze nie rozumiem. To oznacza, że prawdopodobnie brakuje tu wielu oczywistych rzeczy.
 
-Jeśli macie pomysły — chcę je usłyszeć. Jeśli wiecie, jak coś zrobić, z czym wyraźnie się zmagam, i chcecie się przyczynić — porozmawiajmy. Nie mam żadnego przywiązania do bycia projektem solowym. Celem jest dobra gra, nie osobisty pomnik.
+Jeśli macie pomysły — chcę je usłyszeć.
+Jeśli chcecie dołożyć coś od siebie — porozmawiajmy.
 
-Na razie śledźcie devlog. To tam żyją wszystkie prawdziwe notatki z developmentu — co się zmieniło, co się popsuło, czego się nauczyłem. Bez hype'u, tylko uczciwe aktualizacje o grze, która jest za wcześnie, żeby grać, ale zbyt fajna, żeby przestać budować.
+To nie musi być projekt jednej osoby. Celem jest dobra gra i dobra zabawa, nie osobisty pomnik.
 
-Zobaczymy, dokąd to zaprowadzi.
+Devlog to miejsce, gdzie możecie zobaczyć, co się zmieniło, co się popsuło i czego nauczyłem się po drodze. Bez marketingowego hype'u — tylko uczciwe aktualizacje o projekcie, który jeszcze nie do końca jest grą, ale jednocześnie jest zbyt ciekawy, żeby przestać go rozwijać.
+
+Zobaczymy, dokąd nas to zaprowadzi.
 
 ---

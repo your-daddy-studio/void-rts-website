@@ -6,44 +6,57 @@ published: true
 heroImage: "articles/gameplay-1-demo.png"
 ---
 
-Let me be upfront about something: I am not a game developer.
+I Have No Idea What I'm Doing (And That's Kind of the Point)
 
-I've never shipped a game. I've never taken a game dev course, never used Unity or Unreal, never spent a weekend at a game jam. My background is web stuff. The closest I've come to game development before this was making a bouncing ball animation in JavaScript at some point and feeling very proud of myself.
+I'll be honest: I'm not a game developer.
 
-So why does VOID RTS exist?
+I've never released a game. I never finished a gamedev course, never used Unity or Unreal Engine, and never spent a weekend at a game jam. My background is mostly advertising design and a bit of Blender. The closest I ever got to game development was making a bouncing ball animation in Pascal years ago — and I was incredibly proud of it.
 
-Honestly, I got curious. I wanted to see if I could build a real-time strategy game — spaceships, fog of war, resource harvesting, the whole thing — as a single HTML file you just open in a browser. No install, no backend, no server. Just a file. And I decided to use Claude (Anthropic's AI) to help me figure out how, because I had no game dev knowledge to fall back on.
+So why does VOID RTS even exist?
 
-I figured I'd hit a wall pretty quickly. I did not hit a wall.
+Honestly — curiosity.
 
-## What I Actually Built (Without Knowing What I Was Doing)
+I've always been obsessed with retro aesthetics and destruction physics, especially voxel-based simulations. I wanted to see whether it would be possible to build a real-time strategy game using modern AI tools — space fleets, fog of war, resource gathering, the whole classic RTS package.
 
-It's a space RTS. You command a fleet of voxel ships — little blocky things made of cubes — against an enemy fleet across a fog-shrouded battlefield. You harvest palladium from asteroids to... do something with eventually. You scout, you attack, you watch satisfying cube-explosions happen.
+So I decided to use Claude (Anthropic's AI) to help me figure it out.
 
-As of v0.040, the thing has five ship types with different roles, a working fog of war, three order modes (attack-move, patrol, attack-ground), a minimap, animated targeting HUDs, and destructible asteroids. The whole game is about 3,350 lines of code crammed into one file.
+I expected to hit a wall very quickly.
 
-The way development works: I describe what I want, Claude writes the code or talks through how to approach it, I review it, test it, and feed back what broke or needs adjusting. I'm not just pressing a button and watching a game appear — there's a lot of back and forth, debugging, and decisions I have to make. But the reality is that without AI assistance, this project would not exist. I don't have the game dev background to build a Three.js RTS from scratch on my own.
+I didn't.
 
-![Asteroids breaking apart into voxel chunks on impact](/images/articles/asteroids-destruction-demo.png)
+## What I Actually Built (Without Knowing What I'm Doing)
 
-It took me embarrassingly long to figure out why patrol routes behaved weirdly. Turns out pathfinding is a deep rabbit hole. I am still in the rabbit hole — even with AI help, some problems just take a while.
+VOID RTS is a space real-time strategy prototype where you command fleets of voxel-built ships — small blocky creatures made of cubes — fighting enemy forces hidden within the fog of war. You mine palladium from asteroids to… well, eventually do something meaningful with it. You explore, attack, and watch satisfying explosions and structural destruction unfold.
 
-![Ships following a patrol route between two waypoints](/images/articles/patrol-way-points-demo.png)
+As of version v0.040, the prototype includes five ship types with distinct roles, working fog of war, three command modes (move & attack, patrol, and ground attack), a minimap, animated targeting HUDs, and destructible asteroids — all packed into roughly 3,350 lines of code inside a single file.
+
+Development usually looks like this: I describe what I want, Claude helps generate code or explains possible approaches, and I review, test, and send feedback about what broke or needs adjustment. It's not pressing a button and watching a game magically appear. There's plenty of iteration, debugging, and decisions I still have to make myself.
+
+But the truth is — without AI, this project wouldn't exist. I simply don't have the traditional gamedev background required to build an RTS in Three.js from scratch. Honestly, not long ago I didn't even know what Three.js was.
 
 ## The Honest Truth About Where This Is Going
 
-I don't have a roadmap. I have a list of things that seem cool and a vague sense of what a real RTS needs to feel complete. Enemy AI that actually pressures you. Unit production. A win condition. Maybe multiplayer someday, though I haven't thought that far ahead and maybe I shouldn't.
+I don't have a roadmap. I have a growing list of ideas and a vague vision of what this game could become — something arcade-like, old-school in spirit, tactical in gameplay, and maybe someday multiplayer.
 
-What I can promise is that I'm going to keep building this because I genuinely enjoy it, which is more than I can say for a lot of projects I've started. There's something weirdly satisfying about a game mechanic clicking into place when you have no idea if you're implementing it "right" — and when the AI-assisted approach is what got you there.
+One thing I can promise: I'll keep building it.
+
+Because it's genuinely fun.
+
+AI has advanced to a point where someone without deep technical expertise can finally bring long-imagined ideas into reality — ideas that would normally stay trapped somewhere between sketches and unfinished concepts.
+
+There's something strangely satisfying about watching game mechanics start working, even when you're not entirely sure you're doing things "the right way."
 
 ## This Is Where You Come In
 
-Here's the thing — I'm figuring this out as I go, with AI as my main tool for everything I don't know. Which means I'm probably still missing obvious stuff. Things that would make the game more fun, features that real RTS players would expect, insights I haven't thought of yet because this is all new to me.
+I'm figuring this out as I go, using AI as the main tool for everything I don't yet understand. Which probably means many obvious things are still missing.
 
-If you have ideas, I want to hear them. If you know how to do something I'm clearly struggling with and want to contribute — honestly, let's talk. I have no attachment to this being a solo project. The goal is a good game, not a personal monument.
+If you have ideas — I want to hear them.
+If you'd like to contribute in any way — let's talk.
 
-For now, follow the devlog. That's where all the real development notes live — what changed, what broke, what I learned. No hype, just honest updates on a game that's way too early to play but too fun to stop building.
+This doesn't have to be a solo project. The goal isn't a personal monument. The goal is a good game and a good time building it.
 
-Let's see where this goes.
+For now, this devlog is simply a place to see what changed, what broke, and what I learned along the way. No hype — just honest updates about a project that technically isn't a finished game yet, but is already too interesting to stop building.
+
+Let's see where this path leads.
 
 ---

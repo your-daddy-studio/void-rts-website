@@ -195,6 +195,7 @@ h1, h2, h3, h4 {
   color: var(--text-bright);
   letter-spacing: 0.05em;
   line-height: 1.3;
+  text-transform: uppercase;
 }
 
 h1 { font-size: 2.4rem; }
@@ -309,6 +310,7 @@ code {
   font-family: var(--font-pixel);
   font-size: 0.78rem;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -354,6 +356,7 @@ code {
   color: var(--border);
   font-family: var(--font-pixel);
   font-size: 0.78rem;
+  text-transform: uppercase;
   user-select: none;
 }
 
@@ -386,6 +389,7 @@ code {
   font-weight: bold;
   color: var(--text-bright);
   letter-spacing: 0.12em;
+  text-transform: uppercase;
   white-space: nowrap;
   transition: text-shadow 0.3s;
   text-shadow: 0 0 10px rgba(68,170,255,0.3);
@@ -446,6 +450,7 @@ code {
   font-size: 0.78rem;
   color: var(--text-dim);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   position: relative;
 }
 
@@ -536,6 +541,7 @@ code {
   font-size: 0.75rem;
   color: var(--text-dim);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -558,6 +564,7 @@ code {
   color: var(--text-bright);
   margin-bottom: 0.5rem;
   line-height: 1.3;
+  text-transform: uppercase;
   transition: color 0.2s, text-shadow 0.2s;
 }
 .card:hover {
@@ -694,6 +701,7 @@ code {
   font-size: 0.78rem;
   color: var(--text-dim);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
@@ -716,6 +724,7 @@ code {
   font-size: 0.8rem;
   color: var(--text-dim);
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -1020,6 +1029,7 @@ code {
   font-family: var(--font-pixel);
   font-size: 0.75rem;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--blue);
   transition: color 0.2s, text-shadow 0.2s;
 }
@@ -1102,6 +1112,7 @@ code {
   font-family: var(--font-pixel);
   font-size: 0.85rem;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
   padding: 0.3em 0.7em;
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
@@ -1215,6 +1226,7 @@ code {
   color: var(--text-bright);
   margin-bottom: 0.5rem;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .contact-home-card p {
@@ -1236,6 +1248,7 @@ code {
   font-size: 1rem;
   color: var(--text-bright);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .contact-email {
@@ -1243,6 +1256,7 @@ code {
   font-size: 0.88rem;
   color: var(--blue);
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .contact-email:hover {
@@ -1258,6 +1272,7 @@ code {
   font-family: var(--font-pixel);
   font-size: 0.9rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #fff;
   background: var(--red);
   border: 2px solid var(--red);
@@ -1342,6 +1357,7 @@ code {
   color: var(--text-bright);
   margin-bottom: 1rem;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .contact-section p {
@@ -1362,6 +1378,7 @@ code {
   font-size: 1.1rem;
   color: var(--text-bright);
   letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .paypal-btn--lg {
