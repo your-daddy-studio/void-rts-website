@@ -1,0 +1,298 @@
+---
+// BaseLayout — wraps every page with header, footer, and global styles
+interface Props {
+  title: string;
+  description?: string;
+  lang?: 'en' | 'pl';   // controls nav language + html lang attribute
+}
+
+const {
+  title,
+  description = 'VOID RTS — Space Voxel Combat. A browser-based space RTS where everything is made of voxels.',
+  lang = 'en',
+} = Astro.props;
+
+// BASE_URL is set by Astro from astro.config base option (e.g. "/void-rts").
+// We strip the trailing slash so we can always write base + "/path/".
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Helper: prepend the base path to any internal absolute path
+function url(path: string) {
+  return base + path;
+}
+
+// Figure out which nav link should be "active" based on current URL.
+// currentPath already includes the base prefix, so we strip it for comparison.
+const currentPath = Astro.url.pathname;
+const pathWithoutBase = currentPath.replace(base, '') || '/';
+
+// For Polish pages, active-check strips the /pl prefix first
+function isActive(enPath: string) {
+  if (lang === 'pl') {
+    // Polish home is /pl/ — treat it specially
+    if (enPath === '/') return pathWithoutBase === '/pl/' || pathWithoutBase === '/pl';
+    // For other sections strip /pl prefix and compare
+    const stripped = pathWithoutBase.replace(/^\/pl/, '');
+    return stripped.startsWith(enPath);
+  }
+  if (enPath === '/') return pathWithoutBase === '/';
+  return pathWithoutBase.startsWith(enPath);
+}
+
+// Nav labels by language
+const navLabels = {
+  en: { home: 'Home', devlog: 'Devlog', news: 'News', contact: 'Contact' },
+  pl: { home: 'Strona Główna', devlog: 'Devlog', news: 'Aktualności', contact: 'Kontakt' },
+};
+const nav = navLabels[lang];
+
+// Nav hrefs by language — all paths go through url() to pick up the base prefix
+const navHrefs = lang === 'pl'
+  ? { home: url('/pl/'), devlog: url('/pl/devlog/'), news: url('/pl/news/'), contact: url('/pl/contact/') }
+  : { home: url('/'), devlog: url('/devlog/'), news: url('/news/'), contact: url('/contact/') };
+
+// Language selector: build the equivalent URL in the other language.
+// We work on pathWithoutBase (no base prefix), then re-apply it via url().
+function getAlternateLangUrl(targetLang: 'en' | 'pl') {
+  if (targetLang === lang) return null; // already here
+
+  if (targetLang === 'pl') {
+    // Going from EN to PL: add /pl prefix
+    const plPath = '/pl' + (pathWithoutBase === '/' ? '/' : pathWithoutBase);
+    return url(plPath);
+  } else {
+    // Going from PL to EN: strip /pl prefix
+    const stripped = pathWithoutBase.replace(/^\/pl/, '') || '/';
+    return url(stripped);
+  }
+}
+
+const enUrl = getAlternateLangUrl('en');
+const plUrl = getAlternateLangUrl('pl');
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — VOID RTS</title>
+    <meta name="description" content={description} />
+    <!-- Favicon from game's color scheme -->
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <meta name="theme-color" content="#02020a" />
+    <!-- Open Graph basics -->
+    <meta property="og:title" content={`${title} — VOID RTS`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <!-- Tiny5 pixel font (headings/labels) + Inter (body text) from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tiny5&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <!-- Starfield canvas — sits behind everything, pure CSS-friendly JS, very lightweight -->
+    <canvas id="starfield" aria-hidden="true"></canvas>
+
+    <!-- Subtle CRT scanline overlay -->
+    <div class="scanline-overlay" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <!-- 3-column grid: logo | nav | lang selector -->
+      <div class="container header-inner">
+
+        <!-- Left: Logo -->
+        <a href={navHrefs.home} class="site-logo">VOID<span class="logo-underscore">_</span>RTS</a>
+
+        <!-- Centre: Nav links -->
+        <nav>
+          <ul class="site-nav">
+            <li><a href={navHrefs.home} class={isActive('/') ? 'active' : ''}>{nav.home}</a></li>
+            <li><a href={navHrefs.devlog} class={isActive('/devlog/') ? 'active' : ''}>{nav.devlog}</a></li>
+            <li><a href={navHrefs.news} class={isActive('/news/') ? 'active' : ''}>{nav.news}</a></li>
+            <li><a href={navHrefs.contact} class={isActive('/contact/') ? 'active' : ''}>{nav.contact}</a></li>
+          </ul>
+        </nav>
+
+        <!-- Right: Language selector -->
+        <div class="lang-selector" aria-label="Language selector">
+          {enUrl
+            ? <a href={enUrl} class="lang-btn">EN</a>
+            : <span class="lang-btn lang-btn--active">EN</span>
+          }
+          <span class="lang-sep">|</span>
+          {plUrl
+            ? <a href={plUrl} class="lang-btn">PL</a>
+            : <span class="lang-btn lang-btn--active">PL</span>
+          }
+        </div>
+
+      </div>
+    </header>
+
+    <main class="page-main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span class="footer-text">VOID RTS — SPACE VOXEL COMBAT &nbsp;|&nbsp; IN DEVELOPMENT &nbsp;|&nbsp; v0.040</span>
+        <span class="footer-text">Who's Your Daddy Studio</span>
+      </div>
+    </footer>
+
+    <!-- Starfield: ~120 stars, two layers of depth, pure canvas, no libs -->
+    <script>
+      (function () {
+        const canvas = document.getElementById('starfield') as HTMLCanvasElement;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        // Make canvas fill the whole page background
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Create stars with random positions, sizes, and speeds
+        const STAR_COUNT = 130;
+        type Star = { x: number; y: number; r: number; speed: number; opacity: number; twinkleOffset: number };
+        const stars: Star[] = [];
+
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push({
+            x: Math.random(),          // stored as 0-1 ratio so resize works
+            y: Math.random(),
+            r: Math.random() * 1.4 + 0.3,
+            speed: Math.random() * 0.00008 + 0.00002,  // very slow drift downward
+            opacity: Math.random() * 0.6 + 0.2,
+            twinkleOffset: Math.random() * Math.PI * 2,  // so they don't all blink together
+          });
+        }
+
+        let frame = 0;
+        function draw() {
+          if (!ctx) return;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          frame++;
+
+          for (const s of stars) {
+            // Slow drift: move star down, wrap around top when it exits bottom
+            s.y += s.speed;
+            if (s.y > 1) s.y = 0;
+
+            // Gentle twinkle — opacity oscillates slightly
+            const twinkle = Math.sin(frame * 0.02 + s.twinkleOffset) * 0.15;
+            const alpha = Math.max(0.05, Math.min(1, s.opacity + twinkle));
+
+            const px = s.x * canvas.width;
+            const py = s.y * canvas.height;
+
+            ctx.beginPath();
+            ctx.arc(px, py, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(204, 214, 240, ${alpha})`;
+            ctx.fill();
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        draw();
+      })();
+    </script>
+
+    <!-- Lightbox: click any image in .prose or .article-hero-image to view full size -->
+    <script>
+      (function () {
+        // We wait for the DOM to be ready before scanning for images
+        function initLightbox() {
+          // The backdrop + close button are created once, reused for every click
+          const backdrop = document.createElement('div');
+          backdrop.className = 'lightbox-backdrop';
+          backdrop.setAttribute('aria-modal', 'true');
+          backdrop.setAttribute('role', 'dialog');
+          backdrop.setAttribute('aria-label', 'Image viewer');
+
+          const closeBtn = document.createElement('button');
+          closeBtn.className = 'lightbox-close';
+          closeBtn.textContent = '[ X ]';
+          closeBtn.setAttribute('aria-label', 'Close image viewer');
+
+          const img = document.createElement('img');
+          backdrop.appendChild(img);
+
+          let isOpen = false;
+
+          // --- Open ---
+          function open(src: string, alt: string) {
+            img.src = src;
+            img.alt = alt || '';
+            document.body.appendChild(backdrop);
+            document.body.appendChild(closeBtn);
+            document.body.style.overflow = 'hidden'; // stop page scroll while open
+            isOpen = true;
+          }
+
+          // --- Close ---
+          function close() {
+            if (!isOpen) return;
+            backdrop.remove();
+            closeBtn.remove();
+            document.body.style.overflow = '';
+            isOpen = false;
+            // Clear src after removing so there's no stale image flash next open
+            img.src = '';
+          }
+
+          // Close when clicking the backdrop or the image itself
+          backdrop.addEventListener('click', close);
+
+          // Close button click
+          closeBtn.addEventListener('click', close);
+
+          // Close on Escape key
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && isOpen) close();
+          });
+
+          // --- Attach to images ---
+          // Targets: any <img> inside .prose, plus .article-hero-image
+          function attachToImages() {
+            const selectors = '.prose img, .article-hero-image';
+            document.querySelectorAll<HTMLImageElement>(selectors).forEach((el) => {
+              // Skip images that are already wired up
+              if (el.dataset.lightboxReady) return;
+              el.dataset.lightboxReady = '1';
+
+              el.addEventListener('click', function () {
+                // Use the natural src; fall back to currentSrc for responsive images
+                const src = el.getAttribute('src') || el.currentSrc;
+                if (src) open(src, el.alt);
+              });
+            });
+          }
+
+          // Run now (page already rendered by the time this script runs)
+          attachToImages();
+        }
+
+        // DOMContentLoaded is safe here — Astro injects scripts before </body>
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initLightbox);
+        } else {
+          initLightbox();
+        }
+      })();
+    </script>
+
+  </body>
+</html>
+
+<style is:global>
+  /* Pull in global styles — done here so every page gets them */
+  @import '../styles/global.css';
+</style>

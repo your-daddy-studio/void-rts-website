@@ -1,0 +1,46 @@
+---
+// Pojedynczy wpis devlog — Polish devlog post page
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Generuj stronę dla każdego polskiego wpisu devlog
+export async function getStaticPaths() {
+  const devlogs = await getCollection('devlog-pl');
+  return devlogs.map((entry) => ({
+    params: { id: entry.id.replace(/\.md$/, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pl-PL', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+---
+
+<BaseLayout lang="pl" title={entry.data.title} description={entry.data.summary}>
+  <div class="container">
+
+    <a href={`${base}/pl/devlog/`} class="back-link">&larr; Wszystkie wpisy devlog</a>
+
+    <div class="post-meta">
+      <span>{formatDate(entry.data.date)}</span>
+      {entry.data.version && (
+        <span class="version-badge">{entry.data.version}</span>
+      )}
+    </div>
+
+    <h1 style="margin-bottom: 2rem;">{entry.data.title}</h1>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+  </div>
+</BaseLayout>

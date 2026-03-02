@@ -1,0 +1,1388 @@
+/* =========================================================
+   VOID RTS — Global Styles
+   Dark space theme + Tiny5 pixel font + animations
+   - Background: #02020a (near-black deep space)
+   - Blue accent: #44aaff (#4af shorthand)
+   - Red accent: #ff5544 (#f54 shorthand)
+   ========================================================= */
+
+/* --- Reset & Base ---------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:         #02020a;
+  --bg-surface: #080818;
+  --bg-card:    #0c0c22;
+  --border:     #1a1a3a;
+  --blue:       #44aaff;
+  --blue-dim:   #1a4466;
+  --blue-glow:  rgba(68, 170, 255, 0.15);
+  --blue-glow2: rgba(68, 170, 255, 0.35);
+  --red:        #ff5544;
+  --red-dim:    #441a14;
+  --red-glow:   rgba(255, 85, 68, 0.25);
+  --text:       #f0f3f9;
+  --text-dim:   #8E9DB6;
+  --text-bright:#eef4ff;
+  --font-pixel: 'Tiny5', 'Courier New', Courier, monospace;
+  --font-mono:  'Tiny5', 'Courier New', Courier, monospace;
+  /* Inter for body/paragraph text — readable sans-serif, pixel font stays on everything else */
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --max-width:  1300px;
+  --radius:     4px;
+  --radius-lg:  8px;
+}
+
+/* =========================================================
+   KEYFRAME ANIMATIONS
+   ========================================================= */
+
+/* Glow pulse for the hero title — uses filter:drop-shadow instead of
+   text-shadow animation. Safari animates filter reliably; animating
+   text-shadow directly causes flashes/glitches in WebKit. */
+@keyframes glow-pulse {
+  0%,100% { filter: drop-shadow(0 0 6px rgba(68,170,255,0.45)) drop-shadow(0 0 18px rgba(68,170,255,0.12)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(68,170,255,0.75)) drop-shadow(0 0 28px rgba(68,170,255,0.22)); }
+}
+
+/* Separate pulse for the hero backdrop blob — opacity-only, no text-shadow,
+   so it can never combine with glow-pulse on the title to cause a flash */
+@keyframes hero-blob-pulse {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
+}
+
+/* Small dot pulse for the active language indicator */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 3px 1px rgba(68,170,255,0.5); opacity: 0.8; }
+  50%       { box-shadow: 0 0 6px 2px rgba(68,170,255,0.9); opacity: 1; }
+}
+
+/* Red glow pulse for the early-dev badge */
+@keyframes red-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(255,85,68,0.3), inset 0 0 6px rgba(255,85,68,0.05); }
+  50%       { box-shadow: 0 0 16px rgba(255,85,68,0.7), 0 0 30px rgba(255,85,68,0.3), inset 0 0 10px rgba(255,85,68,0.1); }
+}
+
+/* Fade + slide up — used for page entry */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in only */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Blinking cursor for the hero tagline */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Scanline flicker across the overlay */
+@keyframes scanline-move {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Animated gradient border shimmer */
+@keyframes border-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating / bobbing for decorative elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Logo underscore blink */
+@keyframes logo-blink {
+  0%, 49% { opacity: 1; color: var(--blue); }
+  50%, 100% { opacity: 0; color: var(--blue); }
+}
+
+/* Subtle horizontal shimmer on the scanline divider */
+@keyframes scanline-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Card border glow travel */
+@keyframes card-border-travel {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 300% 0%; }
+}
+
+/* Rotate for spinning decorative accents */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* =========================================================
+   STARFIELD CANVAS & SCANLINE OVERLAY
+   ========================================================= */
+
+/* The starfield canvas goes behind everything */
+#starfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Very subtle CRT scanlines — horizontal lines across the whole screen */
+.scanline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  /* Creates a repeating pattern of semi-transparent dark lines */
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.04) 2px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+}
+
+/* =========================================================
+   BASE HTML & BODY
+   ========================================================= */
+
+html {
+  font-size: 17px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  min-height: 100vh;
+  /* Vignette-style color bleed at the edges — space-y */
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(68,170,255,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(255,85,68,0.04) 0%, transparent 55%);
+  /* Animate the whole page content in */
+  animation: fade-in 0.4s ease both;
+}
+
+/* =========================================================
+   TYPOGRAPHY — Tiny5 everywhere
+   ========================================================= */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-pixel);
+  color: var(--text-bright);
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+}
+
+h1 { font-size: 2.4rem; }
+h2 { font-size: 1.65rem; }
+h3 { font-size: 1.25rem; }
+
+p { margin-bottom: 1em; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.15s, opacity 0.15s, text-shadow 0.2s;
+}
+a:hover {
+  color: var(--text-bright);
+  text-shadow: 0 0 8px rgba(68,170,255,0.5);
+}
+
+strong { color: var(--text-bright); }
+
+ul, ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+li { margin-bottom: 0.3em; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  background: var(--bg-card);
+  color: var(--blue);
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius);
+  font-size: 0.88em;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* =========================================================
+   HEADER & NAV
+   ========================================================= */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: rgba(2, 2, 10, 0.88);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  /* Animated top-border line that glows blue */
+  box-shadow: 0 1px 0 var(--border), 0 0 20px rgba(68,170,255,0.08);
+}
+
+/* Extra glowing line right at the top of the header */
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--blue-dim), transparent);
+  opacity: 0.6;
+}
+
+/* 3-column header: logo left | nav centre | lang selector right */
+.header-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 56px;
+  gap: 1rem;
+}
+
+/* Keep old rule as fallback for plain .container usage in header */
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 56px;
+}
+
+/* Centre nav inside its grid cell */
+.header-inner nav {
+  display: flex;
+  justify-content: center;
+}
+
+/* Push lang selector to the right end */
+.header-inner .lang-selector {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Language selector button styles */
+.lang-selector {
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lang-btn {
+  color: var(--text-dim);
+  padding: 0.2em 0.4em;
+  /* No underline — active state uses a dot instead */
+  transition: color 0.2s, text-shadow 0.2s;
+  white-space: nowrap;
+  position: relative;
+}
+
+.lang-btn:hover {
+  color: var(--blue);
+  text-shadow: 0 0 8px rgba(68,170,255,0.6);
+}
+
+/* Active/current language — lit up, with a small pulsing dot to the left */
+.lang-btn--active {
+  color: var(--blue);
+  text-shadow: 0 0 8px rgba(68,170,255,0.5);
+  cursor: default;
+  padding-left: 1.1em; /* make room for the dot */
+}
+
+/* The glowing dot — sits to the left of the active language label */
+.lang-btn--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+.lang-sep {
+  color: var(--border);
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  user-select: none;
+}
+
+/* On small screens collapse the 3-column layout gracefully */
+@media (max-width: 720px) {
+  .header-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+  .header-inner nav {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-inner {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 0.5rem 0;
+    row-gap: 0.4rem;
+  }
+  .header-inner nav { order: 2; }
+  .header-inner .lang-selector { order: 3; justify-content: center; }
+  .header-inner .site-logo { order: 1; }
+}
+
+/* Logo — glows on hover, underscore blinks */
+.site-logo {
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--text-bright);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  transition: text-shadow 0.3s;
+  text-shadow: 0 0 10px rgba(68,170,255,0.3);
+}
+.site-logo:hover {
+  color: var(--text-bright);
+  text-shadow: 0 0 16px rgba(68,170,255,0.8), 0 0 30px rgba(68,170,255,0.4);
+}
+
+/* The underscore in the logo blinks like a cursor */
+.logo-underscore {
+  color: var(--blue);
+  animation: logo-blink 1.1s step-end infinite;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.site-nav a {
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0;
+  /* Smooth all the things */
+  transition: color 0.2s, text-shadow 0.2s;
+  position: relative;
+}
+
+/* Nav hover: color + glow + underline slides in */
+.site-nav a:hover,
+.site-nav a.active {
+  color: var(--blue);
+  text-shadow: 0 0 10px rgba(68,170,255,0.6);
+}
+
+/* Active nav link stays lit */
+.site-nav a.active {
+  color: var(--blue);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  margin-top: 5rem;
+  text-align: center;
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  position: relative;
+}
+
+/* Glowing line at the top of the footer */
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue-dim), transparent);
+  opacity: 0.5;
+}
+
+.footer-text {
+  animation: fade-in 1s ease 0.5s both;
+}
+
+/* =========================================================
+   MAIN CONTENT AREA
+   ========================================================= */
+
+.page-main {
+  padding: 3rem 0 4rem;
+  animation: fade-up 0.5s ease 0.1s both;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.card-list--grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .card-list--grid { grid-template-columns: 1fr; }
+}
+
+/* Card: dark background, animated border-glow on hover */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition: border-color 0.25s, background 0.25s, transform 0.2s, box-shadow 0.25s;
+  /* Clip so the ::before pseudo-element glow stays inside the border radius */
+  overflow: hidden;
+}
+
+/* Shimmer line that travels across the card top edge on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  transition: left 0.5s ease;
+  opacity: 0;
+}
+
+.card:hover {
+  border-color: var(--blue-dim);
+  background: #0e0e28;
+  color: inherit;
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 0 4px 24px rgba(68,170,255,0.12), 0 0 0 1px rgba(68,170,255,0.08);
+}
+
+.card:hover::before {
+  left: 100%;
+  opacity: 1;
+}
+
+.card-meta {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-version {
+  color: var(--blue);
+  background: var(--blue-glow);
+  border: 1px solid var(--blue-dim);
+  padding: 0.1em 0.5em;
+  border-radius: var(--radius);
+  /* Subtle glow on the version badge */
+  box-shadow: 0 0 6px rgba(68,170,255,0.2);
+}
+
+.card-title {
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+.card:hover {
+  text-shadow: none;
+}
+.card:hover .card-title {
+  color: inherit;
+}
+
+.card-summary {
+  font-size: 0.97rem;
+  color: var(--text-dim);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   PAGE HEADER SECTION
+   ========================================================= */
+
+.page-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  animation: fade-up 0.4s ease both;
+}
+.page-header h1 {
+  margin-bottom: 0.5rem;
+  /* Glow on page titles */
+  text-shadow: 0 0 20px rgba(68,170,255,0.3);
+}
+.page-header p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* =========================================================
+   PROSE (article / devlog post body)
+   ========================================================= */
+
+.prose {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.prose h2 {
+  margin-top: 3.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--blue);
+  font-size: 1.2rem;
+  text-shadow: 0 0 12px rgba(68,170,255,0.3);
+}
+
+.prose h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-bright);
+}
+
+.prose p {
+  color: var(--text);
+  margin-bottom: 1.1em;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1.1em;
+  color: var(--text);
+}
+
+.prose li {
+  margin-bottom: 0.4em;
+}
+
+.prose strong {
+  color: var(--blue);
+}
+
+.prose em {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.prose hr {
+  margin: 2.5rem 0;
+  border-color: var(--border);
+}
+
+/* Full-width hero image at the top of an article */
+.article-hero-image {
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  height: 400px;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  margin-top: -3rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 32px rgba(68,170,255,0.08);
+}
+
+/* Inline images inside article prose */
+.prose img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin: 1.75rem 0;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+/* Card thumbnail image (news list cards) */
+.card-thumbnail {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius) var(--radius) 0 0;
+  display: block;
+  margin: -1.5rem -1.5rem 1rem -1.5rem;
+  width: calc(100% + 3rem);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Post meta bar (date + version) */
+.post-meta {
+  font-family: var(--font-pixel);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.post-meta .version-badge {
+  color: var(--blue);
+  background: var(--blue-glow);
+  border: 1px solid var(--blue-dim);
+  padding: 0.1em 0.5em;
+  border-radius: var(--radius);
+  font-size: 0.8em;
+  box-shadow: 0 0 6px rgba(68,170,255,0.2);
+}
+
+/* Back link */
+.back-link {
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 2rem;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+.back-link:hover {
+  color: var(--blue);
+  text-shadow: 0 0 8px rgba(68,170,255,0.5);
+}
+
+/* =========================================================
+   HOME PAGE — HERO
+   ========================================================= */
+
+.hero {
+  text-align: center;
+  padding: 4.5rem 0 3rem;
+  position: relative;
+  animation: fade-up 0.6s ease 0.05s both;
+}
+
+/* Decorative blue glow blob behind the hero title.
+   Uses hero-blob-pulse (opacity only) — completely separate from glow-pulse
+   on the title, so the two can never combine into a visible flash. */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; height: 200px;
+  background: radial-gradient(ellipse, rgba(68,170,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  animation: hero-blob-pulse 5s ease-in-out infinite;
+}
+
+.hero-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(4.8rem, 14vw, 9rem);
+  color: var(--text-bright);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 0.5rem;
+  /* Static text-shadow — never animated. Safari glitches when text-shadow
+     is animated; a fixed value is perfectly stable. The pulsing glow effect
+     is achieved via filter:drop-shadow animation (glow-pulse keyframe) which
+     Safari composites correctly, and the hero::before blob also pulses. */
+  text-shadow: 0 0 8px rgba(68,170,255,0.35), 0 0 24px rgba(68,170,255,0.10);
+  animation: glow-pulse 3.5s ease-in-out infinite;
+  /* GPU layer hint — filter animation benefits from this too */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: filter;
+}
+
+.hero-subtitle {
+  font-family: var(--font-pixel);
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  color: var(--blue);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+  /* Blinking cursor after "SPACE VOXEL COMBAT" */
+  display: inline-block;
+  position: relative;
+}
+
+
+.hero-desc {
+  max-width: 540px;
+  margin: 0 auto 2.5rem;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  animation: fade-up 0.6s ease 0.25s both;
+}
+
+/* The "Under Construction" badge — red, pulsing glow, sharp pixel style */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-pixel);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35em 1em 0.35em calc(1em + 0.2em);
+  border-radius: 2px;
+  background: var(--red-dim);
+  border: 2px solid var(--red);
+  color: var(--red);
+  margin-bottom: 1.75rem;
+  animation: red-pulse 2.5s ease-in-out infinite, fade-up 0.4s ease both;
+}
+
+/* =========================================================
+   SCANLINE DIVIDER (the horizontal accent lines)
+   ========================================================= */
+
+/* The animated shimmer line between sections */
+.scanline {
+  width: 120px;
+  height: 2px;
+  /* Gradient that animates left-right */
+  background: linear-gradient(90deg, transparent, var(--blue-dim), var(--blue), var(--blue-dim), transparent);
+  background-size: 200% 100%;
+  margin: 2.5rem auto;
+  border: none;
+  animation: scanline-shimmer 3s linear infinite;
+  box-shadow: 0 0 8px rgba(68,170,255,0.4);
+}
+
+/* =========================================================
+   FEATURES GRID
+   ========================================================= */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem auto;
+  max-width: 1300px;
+}
+
+/* Feature cards — same hover treatment as regular cards but with stagger */
+.feature-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s, background 0.25s;
+  /* Staggered entry animation — each card slides up slightly later */
+  animation: fade-up 0.5s ease both;
+}
+
+/* Stagger the 8 feature cards */
+.feature-item:nth-child(1) { animation-delay: 0.1s; }
+.feature-item:nth-child(2) { animation-delay: 0.15s; }
+.feature-item:nth-child(3) { animation-delay: 0.2s; }
+.feature-item:nth-child(4) { animation-delay: 0.25s; }
+.feature-item:nth-child(5) { animation-delay: 0.3s; }
+.feature-item:nth-child(6) { animation-delay: 0.35s; }
+.feature-item:nth-child(7) { animation-delay: 0.4s; }
+.feature-item:nth-child(8) { animation-delay: 0.45s; }
+
+/* Corner accent — a small glowing triangle in the top-right */
+.feature-item::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 20px 20px 0;
+  border-color: transparent var(--blue-dim) transparent transparent;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.feature-item:hover {
+  border-color: var(--blue-dim);
+  background: #0e0e28;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 28px rgba(68,170,255,0.14), 0 0 0 1px rgba(68,170,255,0.1);
+}
+
+.feature-item:hover::after {
+  opacity: 1;
+}
+
+.feature-label {
+  font-family: var(--font-pixel);
+  font-size: 0.82rem;
+  color: var(--blue);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 8px rgba(68,170,255,0.4);
+}
+
+.feature-text {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* =========================================================
+   FEATURE ICONS — flat pixel art, 4px grid, 48x48 viewbox
+   ========================================================= */
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.ficon {
+  width: 56px;
+  height: 56px;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(68,170,255,0.25));
+  transition: filter 0.3s, transform 0.3s;
+}
+
+.feature-item:hover .ficon {
+  filter: drop-shadow(0 0 14px rgba(68,170,255,0.55));
+  transform: scale(1.1);
+}
+
+/* ----- Shared keyframes ----- */
+
+@keyframes icon-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+@keyframes pixel-blink {
+  0%, 100% { opacity: 0.8; }
+  50%      { opacity: 0.15; }
+}
+
+@keyframes pixel-ping {
+  0%, 70%, 100% { opacity: 0; }
+  35%           { opacity: 1; }
+}
+
+@keyframes drift-left {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(2px); }
+}
+
+@keyframes drift-right {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-2px); }
+}
+
+@keyframes clash-blink {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 1; }
+}
+
+@keyframes sparkle-fade {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.15; }
+}
+
+/* ----- 1. VOXEL — float + debris blink ----- */
+.ficon--voxel { animation: icon-bob 3s ease-in-out infinite; }
+.ficon--voxel .vox-debris rect { animation: pixel-blink 1.2s step-end infinite; }
+.ficon--voxel .vox-debris rect:nth-child(2) { animation-delay: 0.3s; }
+.ficon--voxel .vox-debris rect:nth-child(3) { animation-delay: 0.6s; }
+.ficon--voxel .vox-debris rect:nth-child(4) { animation-delay: 0.9s; }
+
+/* ----- 2. ARCADE — bob + eye blink ----- */
+.ficon--arcade { animation: icon-bob 2s ease-in-out infinite; }
+.ficon--arcade .invader-eye { animation: pixel-blink 1.5s step-end infinite; }
+
+/* ----- 3. RADAR — blips ping ----- */
+.ficon--radar .radar-blip1 { animation: pixel-ping 2.5s linear 0.5s infinite; }
+.ficon--radar .radar-blip2 { animation: pixel-ping 2.5s linear 1.5s infinite; }
+.ficon--radar .radar-sweep-px { animation: pixel-blink 1.8s ease-in-out infinite; }
+
+/* ----- 4. HYPERSPACE — streaks flash, ship pulses ----- */
+.ficon--hyper .hyper-streaks { animation: pixel-blink 1.5s ease-in-out infinite; }
+.ficon--hyper .hyper-ship { animation: icon-bob 1s ease-in-out infinite; }
+
+/* ----- 5. MULTIPLAYER — two users + clash ----- */
+.ficon--multi .mp-clash { animation: clash-blink 1.2s ease-in-out infinite; }
+
+/* ----- 6. GEM — sparkle ----- */
+.ficon--look { animation: icon-bob 3.5s ease-in-out infinite; }
+.ficon--look .gem-spark  { animation: sparkle-fade 1.8s ease-in-out infinite; }
+.ficon--look .gem-spark2 { animation: sparkle-fade 1.8s ease-in-out 0.9s infinite; }
+
+/* =========================================================
+   SECTION HEADERS (home page)
+   ========================================================= */
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.section-header h2 {
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.section-header a {
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  transition: color 0.2s, text-shadow 0.2s;
+}
+.section-header a:hover {
+  color: var(--text-bright);
+  text-shadow: 0 0 8px rgba(68,170,255,0.5);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  .hero-title { letter-spacing: 0.06em; }
+  .site-nav { gap: 1rem; }
+  .site-nav a { font-size: 0.78rem; }
+  .card { padding: 1.1rem; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 400px) {
+  .features-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   LIGHTBOX — full-screen image overlay
+   ========================================================= */
+
+/* The dark backdrop that covers the whole screen */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;                          /* shorthand for top/right/bottom/left: 0 */
+  z-index: 9000;
+  background: rgba(2, 2, 10, 0.92);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  /* Animate in */
+  animation: fade-in 0.18s ease both;
+  cursor: zoom-out;
+}
+
+/* The image itself — contained within the viewport */
+.lightbox-backdrop img {
+  /* Override the .prose img rules */
+  display: block !important;
+  margin: 0 !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 8px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(68,170,255,0.12) !important;
+  /* Scale to fit the viewport with breathing room */
+  max-width: min(90vw, 1400px);
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+  /* Scale up from slightly smaller — feels snappy */
+  animation: lightbox-pop 0.2s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+
+@keyframes lightbox-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* X close button — top-right corner */
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 9001;
+  background: rgba(12, 12, 34, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--font-pixel);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  padding: 0.3em 0.7em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  line-height: 1;
+}
+.lightbox-close:hover {
+  color: var(--blue);
+  border-color: var(--blue-dim);
+  box-shadow: 0 0 10px rgba(68,170,255,0.3);
+}
+
+/* Make clickable images show a zoom cursor and a subtle glow hint */
+.prose img,
+.article-hero-image {
+  cursor: zoom-in;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+}
+.prose img:hover,
+.article-hero-image:hover {
+  border-color: var(--blue-dim) !important;
+  box-shadow: 0 4px 24px rgba(68,170,255,0.18), 0 0 0 1px rgba(68,170,255,0.1) !important;
+  transform: scale(1.008);
+}
+
+/* =========================================================
+   CONTACT & SUPPORT — Home page section
+   ========================================================= */
+
+.contact-home {
+  margin-top: 1rem;
+}
+
+.contact-home-inner {
+  background: linear-gradient(135deg, rgba(68,170,255,0.06) 0%, rgba(12,12,34,0.8) 50%, rgba(255,85,68,0.06) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle top glow line */
+.contact-home-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), transparent 40%, transparent 60%, var(--red));
+  opacity: 0.6;
+}
+
+.contact-home-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.contact-home-title {
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 12px rgba(68,170,255,0.3);
+}
+
+.contact-home-sub {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.contact-home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.contact-home-card {
+  background: rgba(2,2,10,0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-home-card:hover {
+  box-shadow: 0 0 24px rgba(68,170,255,0.1);
+}
+
+.contact-home-card--msg:hover {
+  border-color: var(--blue-dim);
+}
+
+.contact-home-card--support:hover {
+  border-color: rgba(255,85,68,0.3);
+  box-shadow: 0 0 24px rgba(255,85,68,0.1);
+}
+
+.contact-home-card-icon {
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 6px rgba(68,170,255,0.3));
+}
+
+.contact-home-card--support .contact-home-card-icon {
+  filter: drop-shadow(0 0 6px rgba(255,85,68,0.3));
+}
+
+.contact-home-card h3 {
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.06em;
+}
+
+.contact-home-card p {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.contact-home-info {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.contact-home-name {
+  font-family: var(--font-pixel);
+  font-size: 1rem;
+  color: var(--text-bright);
+  letter-spacing: 0.06em;
+}
+
+.contact-email {
+  font-family: var(--font-pixel);
+  font-size: 0.88rem;
+  color: var(--blue);
+  letter-spacing: 0.04em;
+}
+
+.contact-email:hover {
+  color: var(--text-bright);
+  text-shadow: 0 0 8px rgba(68,170,255,0.5);
+}
+
+/* PayPal button */
+.paypal-btn {
+  display: inline-block;
+  margin-top: 1.4rem;
+  padding: 0.7em 2em;
+  font-family: var(--font-pixel);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--red);
+  border: 2px solid var(--red);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s, color 0.2s;
+}
+
+.paypal-btn:hover {
+  background: transparent;
+  color: var(--red);
+  box-shadow: 0 0 20px rgba(255,85,68,0.4);
+  transform: translateY(-2px);
+  text-shadow: none;
+}
+
+/* =========================================================
+   CONTACT & SUPPORT — Dedicated page
+   ========================================================= */
+
+.contact-page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.contact-section {
+  background: linear-gradient(180deg, var(--bg-card) 0%, rgba(2,2,10,0.9) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Top accent line per card */
+.contact-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.contact-section--msg::before {
+  background: linear-gradient(90deg, var(--blue), transparent);
+}
+
+.contact-section--support::before {
+  background: linear-gradient(90deg, var(--red), transparent);
+}
+
+.contact-section:hover::before {
+  opacity: 1;
+}
+
+.contact-section--msg:hover {
+  border-color: var(--blue-dim);
+  box-shadow: 0 0 30px rgba(68,170,255,0.1);
+}
+
+.contact-section--support:hover {
+  border-color: rgba(255,85,68,0.3);
+  box-shadow: 0 0 30px rgba(255,85,68,0.1);
+}
+
+.contact-section-icon {
+  margin-bottom: 1.2rem;
+  filter: drop-shadow(0 0 8px rgba(68,170,255,0.3));
+}
+
+.contact-section--support .contact-section-icon {
+  filter: drop-shadow(0 0 8px rgba(255,85,68,0.3));
+}
+
+.contact-section h2 {
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.contact-section p {
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.contact-details {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.contact-name {
+  font-family: var(--font-pixel);
+  font-size: 1.1rem;
+  color: var(--text-bright);
+  letter-spacing: 0.06em;
+}
+
+.paypal-btn--lg {
+  font-size: 1rem;
+  padding: 0.85em 2.5em;
+}
+
+@media (max-width: 600px) {
+  .contact-page-grid { grid-template-columns: 1fr; }
+  .contact-home-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   REDUCED MOTION — respect the OS accessibility setting
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  #starfield { display: none; }
+}

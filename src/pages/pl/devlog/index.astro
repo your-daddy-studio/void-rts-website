@@ -1,0 +1,51 @@
+---
+// Devlog — lista wpisów (Polish devlog list page)
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const allDevlogs = await getCollection('devlog-pl');
+// Sortuj od najnowszego
+const devlogs = allDevlogs.sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pl-PL', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+---
+
+<BaseLayout
+  lang="pl"
+  title="Devlog"
+  description="Devlog VOID RTS — aktualizacje o tym, co zostało zbudowane, co się zmieniło i co planowane jest dalej."
+>
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Devlog</h1>
+      <p>Aktualizacje developerskie — co zostało zbudowane, co się zmieniło, co się popsuło, co dalej.</p>
+    </div>
+
+    {devlogs.length === 0 && (
+      <p style="color: var(--text-dim);">Brak wpisów. Wróć wkrótce.</p>
+    )}
+
+    <div class="card-list">
+      {devlogs.map((entry) => (
+        <a href={`${base}/pl/devlog/${entry.id.replace(/\.md$/, '')}/`} class="card">
+          <div class="card-meta">
+            <span>{formatDate(entry.data.date)}</span>
+            {entry.data.version && (
+              <span class="card-version">{entry.data.version}</span>
+            )}
+          </div>
+          <p class="card-title">{entry.data.title}</p>
+          <p class="card-summary">{entry.data.summary}</p>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</BaseLayout>

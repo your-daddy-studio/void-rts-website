@@ -1,0 +1,54 @@
+---
+// Aktualności — lista artykułów (Polish news list page)
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const allNews = await getCollection('news-pl', ({ data }) => data.published);
+const news = allNews.sort((a, b) => b.data.date.localeCompare(a.data.date));
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pl-PL', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+}
+---
+
+<BaseLayout
+  lang="pl"
+  title="Aktualności"
+  description="Aktualności i artykuły o VOID RTS — ogłoszenia, analizy i aktualizacje developerskie."
+>
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Aktualności</h1>
+      <p>Ogłoszenia, artykuły i dłuższe lektury o VOID RTS.</p>
+    </div>
+
+    {news.length === 0 && (
+      <p style="color: var(--text-dim);">Brak artykułów. Wróć wkrótce.</p>
+    )}
+
+    <div class="card-list card-list--grid">
+      {news.map((entry) => (
+        <a href={`${base}/pl/news/${entry.id.replace(/\.md$/, '')}/`} class="card">
+          {entry.data.heroImage && (
+            <img
+              src={`${base}/images/${entry.data.heroImage}`}
+              alt={entry.data.title}
+              class="card-thumbnail"
+            />
+          )}
+          <div class="card-meta">
+            <span>{formatDate(entry.data.date)}</span>
+          </div>
+          <p class="card-title">{entry.data.title}</p>
+          <p class="card-summary">{entry.data.summary}</p>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</BaseLayout>
