@@ -7,7 +7,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Grab the 3 most recent devlog entries to show as preview
 const allDevlogs = await getCollection('devlog');
-const sortedDevlogs = allDevlogs.sort((a, b) => b.data.date.localeCompare(a.data.date));
+const sortedDevlogs = allDevlogs.sort((a, b) =>
+  b.data.date.localeCompare(a.data.date) || b.id.localeCompare(a.id)
+);
 const latestDevlogs = sortedDevlogs.slice(0, 3);
 
 // Grab the most recent news article
