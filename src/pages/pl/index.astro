@@ -5,10 +5,10 @@ import { getCollection } from 'astro:content';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// Grab the most recent Polish devlog entry to show as preview
+// Grab the 3 most recent Polish devlog entries to show as preview
 const allDevlogs = await getCollection('devlog-pl');
 const sortedDevlogs = allDevlogs.sort((a, b) => b.data.date.localeCompare(a.data.date));
-const latestDevlog = sortedDevlogs[0];
+const latestDevlogs = sortedDevlogs.slice(0, 3);
 
 // Grab the most recent Polish news article
 const allNews = await getCollection('news-pl', ({ data }) => data.published);
@@ -255,24 +255,26 @@ function formatDate(dateStr: string) {
 
     <hr class="scanline" />
 
-    <!-- Ostatni wpis devlog ------------------------------>
-    {latestDevlog && (
+    <!-- Najnowsze wpisy devlog (do 3, od najnowszego) -->
+    {latestDevlogs.length > 0 && (
       <section>
         <div class="section-header">
           <h2>// Najnowszy devlog</h2>
           <a href={`${base}/pl/devlog/`}>{"Wszystkie wpisy >"}</a>
         </div>
         <div class="card-list">
-          <a href={`${base}/pl/devlog/${latestDevlog.id.replace(/\.md$/, '')}/`} class="card">
-            <div class="card-meta">
-              <span>{formatDate(latestDevlog.data.date)}</span>
-              {latestDevlog.data.version && (
-                <span class="card-version">{latestDevlog.data.version}</span>
-              )}
-            </div>
-            <p class="card-title">{latestDevlog.data.title}</p>
-            <p class="card-summary">{latestDevlog.data.summary}</p>
-          </a>
+          {latestDevlogs.map((entry) => (
+            <a href={`${base}/pl/devlog/${entry.id.replace(/\.md$/, '')}/`} class="card">
+              <div class="card-meta">
+                <span>{formatDate(entry.data.date)}</span>
+                {entry.data.version && (
+                  <span class="card-version">{entry.data.version}</span>
+                )}
+              </div>
+              <p class="card-title">{entry.data.title}</p>
+              <p class="card-summary">{entry.data.summary}</p>
+            </a>
+          ))}
         </div>
       </section>
     )}
