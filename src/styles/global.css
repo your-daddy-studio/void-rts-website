@@ -766,6 +766,22 @@ code {
   animation: hero-blob-pulse 5s ease-in-out infinite;
 }
 
+/* Wrapper for the interactive voxel canvas logo */
+.hero-logo-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  /* Keep it interactive */
+  cursor: crosshair;
+}
+
+/* Canvas sizes itself via JS — no stretching */
+.hero-voxel-canvas {
+  display: block;
+  width: 100%;
+}
+
+/* Fallback h1 — only visible when canvas is missing (noscript, reduced motion) */
 .hero-title {
   font-family: var(--font-pixel);
   font-size: clamp(4.8rem, 14vw, 9rem);
@@ -774,13 +790,8 @@ code {
   text-transform: uppercase;
   line-height: 1.05;
   margin-bottom: 0.5rem;
-  /* Static text-shadow — never animated. Safari glitches when text-shadow
-     is animated; a fixed value is perfectly stable. The pulsing glow effect
-     is achieved via filter:drop-shadow animation (glow-pulse keyframe) which
-     Safari composites correctly, and the hero::before blob also pulses. */
   text-shadow: 0 0 8px rgba(68,170,255,0.35), 0 0 24px rgba(68,170,255,0.10);
   animation: glow-pulse 3.5s ease-in-out infinite;
-  /* GPU layer hint — filter animation benefits from this too */
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;

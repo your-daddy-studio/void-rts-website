@@ -37,7 +37,14 @@ Context file: `/Users/slawek/AIGames/VoxelRTS/Claude/Context/website-context.md`
 - `getStaticPaths` required in `[id].astro` files for static generation
 
 ## Build Output
-12 pages (6 EN + 6 PL). Build: ~835ms. Output: `dist/`.
+14 pages (7 EN + 7 PL). Build: ~800ms. Output: `dist/`.
+
+## Interactive Voxel Logo (added 2026-03-03)
+- `public/js/voxel-logo.js` — Canvas2D, loaded via `<script defer>` on both home pages
+- Canvas `#voxel-logo` inside `.hero-logo-wrap` — CSS `clamp(160px, 28vw, 320px)` height
+- Renders "VOID" + "RTS" as 3D isometric voxels with destruction, particles, regen, CRT effects
+- Fallback: `<noscript>` contains old `<h1 class="hero-title">`
+- When editing home pages: hero `<section>` has canvas + script tag instead of plain h1
 
 ## GitHub Pages Deployment (added 2026-03-02)
 - Repo: `github.com/your-daddy-studio/void-rts`

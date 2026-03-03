@@ -30,7 +30,14 @@ function formatDate(dateStr: string) {
   <!-- Hero section ---------------------------------------->
   <section class="hero container">
     <div class="hero-badge">Under Construction</div>
-    <h1 class="hero-title">VOID RTS</h1>
+
+    <!-- WebGL voxel "VOID RTS" logo — interactive, click to destroy voxels -->
+    <div class="hero-logo-wrap">
+      <canvas id="voxel-logo" class="hero-voxel-canvas" aria-label="VOID RTS logo made of voxels"></canvas>
+      <!-- Fallback for no-JS / reduced motion -->
+      <noscript><h1 class="hero-title">VOID RTS</h1></noscript>
+    </div>
+
     <p class="hero-subtitle">Voxel RTS &mdash; Retro Roots, New World</p>
     <p class="hero-desc">
       Building a voxel real-time strategy game from scratch &mdash; deep space setting,
@@ -38,6 +45,9 @@ function formatDate(dateStr: string) {
       Zero game dev experience. No idea what I'm doing. Let's see how it goes.
     </p>
   </section>
+
+  <!-- Voxel logo script — loaded after DOM is ready -->
+  <script src={`${base}/js/voxel-logo.js`} defer></script>
 
   <div class="container">
     <hr class="scanline" />
